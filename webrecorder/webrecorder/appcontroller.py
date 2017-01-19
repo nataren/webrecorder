@@ -17,6 +17,7 @@ from six.moves.urllib.parse import urlsplit, urljoin, unquote
 from pywb.rewrite.templateview import JinjaEnv
 from webrecorder.utils import load_wr_config, init_logging
 
+from webrecorder.apicontroller import ApiController
 from webrecorder.apiutils import CustomJSONEncoder
 from webrecorder.contentcontroller import ContentController
 from webrecorder.snapshotcontroller import SnapshotController
@@ -43,7 +44,8 @@ from wsgiprox.wsgiprox import WSGIProxMiddleware
 
 # ============================================================================
 class AppController(BaseController):
-    ALL_CONTROLLERS = [DownloadController,
+    ALL_CONTROLLERS = [ApiController,
+                       DownloadController,
                        UploadController,
                        LoginController,
                        UserController,
@@ -107,10 +109,10 @@ class AppController(BaseController):
 
         # Init Core app controllers
         for controller_type in self.ALL_CONTROLLERS:
-            x = controller_type(app=bottle_app,
-                                jinja_env=jinja_env,
-                                manager=manager,
-                                config=config)
+            controller_type(app=bottle_app,
+                            jinja_env=jinja_env,
+                            manager=manager,
+                            config=config)
 
         # Set Error Handler
         bottle_app.default_error_handler = self.make_err_handler(
