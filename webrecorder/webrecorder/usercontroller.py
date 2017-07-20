@@ -314,6 +314,7 @@ class UserController(BaseController):
                 self._raise_error(404, 'No such user')
 
             user = users[username]
+            user['username'] = username
 
             # assemble space usage
             total = self.manager.get_size_allotment(username)
