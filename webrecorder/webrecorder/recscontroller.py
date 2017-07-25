@@ -23,7 +23,7 @@ class RecsController(BaseController):
 
         @self.app.get('/api/v1/recordings')
         def get_recordings():
-            user, coll = self.get_user_coll(api=True)
+            user, coll = self.get_user_coll(api=True, redir_check=False)
 
             rec_list = self.manager.get_recordings(user, coll)
 
@@ -31,7 +31,7 @@ class RecsController(BaseController):
 
         @self.app.get('/api/v1/recordings/<rec>')
         def get_recording(rec):
-            user, coll = self.get_user_coll(api=True)
+            user, coll = self.get_user_coll(api=True, redir_check=False)
 
             return self.get_rec_info(user, coll, rec)
 
