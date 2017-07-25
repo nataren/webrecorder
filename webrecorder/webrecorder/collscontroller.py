@@ -56,9 +56,9 @@ class CollsController(BaseController):
 
         @self.app.get('/api/v1/collections/<coll>')
         def get_collection(coll):
-            user = self.get_user(api=True)
+            user = self.get_user(api=True, redir_check=False)
 
-            return self.get_collection_info(user, coll)
+            return self.get_collection_info_for_view(user, coll, redir_check=False)
 
         @self.app.delete('/api/v1/collections/<coll>')
         def delete_collection(coll):
@@ -208,14 +208,15 @@ class CollsController(BaseController):
             rec_list = [self.sanitize_title(title) for title in rec_list.split(',')]
             return self.get_collection_info_for_view(user, coll, rec_list)
 
-    def get_collection_info_for_view(self, user, coll, rec_list=None):
-        self.redir_host()
+    def get_collection_info_for_view(self, user, coll, rec_list=None, redir_check=True):
+        if redir_check: self.redir_host()
+
         result = self.get_collection_info(user, coll)
         if result.get('error_message'):
             self._raise_error(404, 'Collection not found')
 
-        if self.manager.get_curr_user() == user:
-            result['collections'] = self.manager.get_collections(self.manager.get_curr_user())
+        # if self.manager.get_curr_user() == user:
+        #     result['collections'] = self.manager.get_collections(self.manager.get_curr_user())
 
         result['size_remaining'] = self.manager.get_size_remaining(user)
         result['user'] = self.get_view_user(user)
@@ -226,8 +227,10 @@ class CollsController(BaseController):
         result['coll_title'] = quote(result['collection']['title'])
 
         for rec in result['collection']['recordings']:
-           rec['pages'] = self.manager.list_pages(user, coll, rec['id'])
-           result['bookmarks'].append(rec['pages'])
+            rec['pages'] = self.manager.list_pages(user, coll, rec['id'])
+
+            if len(rec['pages']) > 0:
+                result['bookmarks'].append(rec['pages'])
 
         if not result['collection'].get('desc'):
             result['collection']['desc'] = self.default_coll_desc.format(result['coll_title'])
