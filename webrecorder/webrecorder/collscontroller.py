@@ -52,7 +52,10 @@ class CollsController(BaseController):
 
             coll_list = self.manager.get_collections(user)
 
-            return {'collections': coll_list}
+            return {
+                'user': user,
+                'collections': coll_list
+            }
 
         @self.app.get('/api/v1/collections/<coll>')
         def get_collection(coll):
