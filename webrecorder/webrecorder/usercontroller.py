@@ -253,7 +253,7 @@ class UserController(BaseController):
             if len(err):
                 return {'errors': err}
 
-            desc = {'name': data['name']}
+            desc = {'name': data.get('name', '')}
 
             if move_info:
                 desc['move_info'] = move_info
