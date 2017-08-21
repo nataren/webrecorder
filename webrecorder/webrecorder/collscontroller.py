@@ -109,7 +109,7 @@ class CollsController(BaseController):
 
         @self.app.post('/api/v1/collections/<coll>/public')
         def set_public(coll):
-            user = self.get_user(api=True)
+            user = self.get_user(api=True, redir_check=False)
             self._ensure_coll_exists(user, coll)
 
             # TODO: notify the user if this is a request from the admin panel
@@ -118,6 +118,8 @@ class CollsController(BaseController):
 
             public = self.post_get('public') == 'true'
             self.manager.set_public(user, coll, public)
+
+            return {'is_public': '1' if public else False}
 
         @self.app.post('/api/v1/collections/<coll>/desc')
         def update_desc(coll):
