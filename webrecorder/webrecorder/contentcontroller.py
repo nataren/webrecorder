@@ -68,6 +68,11 @@ class ContentController(BaseController, RewriterApp):
         return csp
 
     def init_routes(self):
+        # API
+        @self.app.get(['/api/v1/client_archives', '/api/v1/client_archives/'])
+        def get_client_archives():
+            return self.client_archives
+
         # REDIRECTS
         @self.app.route('/record/<wb_url:path>', method='ANY')
         def redir_new_temp_rec(wb_url):
