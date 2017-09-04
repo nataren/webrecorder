@@ -207,6 +207,18 @@ def modify_user(m):
         m.cork._store.users[username]['email_addr'] = new_email
         has_modified = True
 
+    mod_pass = input('Set new password? (y/n)')
+    if mod_pass:
+        passwd = getpass('password: ')
+        passwd2 = getpass('repeat password: ')
+
+        if passwd != passwd2 or not m.PASS_RX.match(passwd):
+            print('Passwords must match and be at least 8 characters long '
+                  'with lowercase, uppercase, and either digits or symbols.')
+            return
+
+        m.cork.update_password(username, passwd)
+
     #
     # additional modifications can be added here
     #
