@@ -10,7 +10,7 @@ class OutsideClick extends Component {
 
   static propTypes = {
     children: PropTypes.node.isRequired,
-    classes: PropTypes.object,
+    classes: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     handleClick: PropTypes.func,
     inlineBlock: PropTypes.bool
   };
