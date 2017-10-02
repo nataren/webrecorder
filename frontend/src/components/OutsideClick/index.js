@@ -32,7 +32,7 @@ class OutsideClick extends Component {
   }
 
   checkClick = (evt) => {
-    if (!this.container.contains(evt.target) && this.props.handleClick) {
+    if (this.container && !this.container.contains(evt.target) && this.props.handleClick) {
       this.props.handleClick(evt);
     }
   }

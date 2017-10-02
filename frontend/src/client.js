@@ -49,7 +49,7 @@ const renderApp = (renderProps, includeDevTools = false) => {
   if(includeDevTools)
     DevTools = require('./containers/DevTools/DevTools');
 
-  ReactDOM.render(
+  ReactDOM.hydrate(
     <AppContainer>
       <Provider store={store} key="provider">
         {
@@ -66,22 +66,10 @@ const renderApp = (renderProps, includeDevTools = false) => {
   );
 };
 
-// render once without devtools to confirm client and server renders match
-renderApp({ routes: baseRoute(store), client });
 
-if (process.env.NODE_ENV !== 'production') {
-  window.React = React; // enable debugger
+// render app, conditionally with dev tools
+renderApp({ routes: baseRoute(store), client }, (__DEVTOOLS__ && !window.__REDUX_DEVTOOLS_EXTENSION__));
 
-  if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
-    console.error('Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.');
-  }
-}
-
-// if devtools enabled, rerender app
-// eslint-disable-next-line
-if (__DEVTOOLS__ && !window.__REDUX_DEVTOOLS_EXTENSION__) {
-  renderApp({ routes: baseRoute(store), client }, true);
-}
 
 if (module.hot) {
   module.hot.accept('./routes', () => {
