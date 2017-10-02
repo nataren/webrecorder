@@ -78,7 +78,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // if devtools enabled, rerender app
-if (__DEVTOOLS__ && !window.devToolsExtension) {
+// eslint-disable-next-line
+if (__DEVTOOLS__ && !window.__REDUX_DEVTOOLS_EXTENSION__) {
   renderApp({ routes: baseRoute(store), client }, true);
 }
 
